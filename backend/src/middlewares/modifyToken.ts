@@ -9,6 +9,7 @@ const modifyToken = (req: Request, res: Response, next: NextFunction) => {
     (req as any).token = authorization.substring(7);
   }
 
+  console.log((req as any).token);
   next();
 }
 

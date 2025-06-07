@@ -4,6 +4,8 @@ import config from '../config';
 
 export const jwtAuth = (req: Request, res: Response, next: NextFunction) => {
   const token = (req as any).token;
+
+  console.log("jwtauth ", token);
   
   try {
     if (!config.SECRET_KEY) {

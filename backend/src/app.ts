@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import config from './config';
+import cors from 'cors';
 
 import loginRouter from './routers/loginRouter';
 import registerRouter from './routers/registerRouter';
@@ -12,6 +13,7 @@ import modifyToken from './middlewares/modifyToken';
 import { jwtAuth } from './middlewares/jwtAuth';
 
 const app = express();
+app.use(cors());
 
 console.log("connecting to ", config.MONGODB_URI);
 mongoose
