@@ -46,6 +46,8 @@ export const addNewContact = async (req: Request, res: Response, next: NextFunct
   try {
     const newContact = await contact.save();
     user.contacts = user.contacts.concat(newContact._id);
+
+    res.status(201).json(newContact);
     await user.save();
   } catch (err) {
     next(err);
