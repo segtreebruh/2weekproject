@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import config from '../config';
-import type { JwtToken } from '@shared/types';
 
 export const jwtAuth = (req: Request, res: Response, next: NextFunction) => {
   const token = (req as any).token;

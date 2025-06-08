@@ -26,7 +26,7 @@ mongoose
 app.use(express.static("dist"));
 app.use(express.json());
 
-app.use(modifyToken);
+app.use(modifyToken); // add the jwtToken to request
 
 // Public routes (no authentication required)
 app.use("/api/login", loginRouter);
