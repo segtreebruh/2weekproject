@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import type { LoginRequest, Contact } from '../../types';
+import LoginForm from "./components/LoginForm";
+
 
 function App() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState<Contact[]>([]);
 
   useEffect(() => {
     if (user !== null) {
@@ -17,19 +18,16 @@ function App() {
         headers: { Authorization: `Bearer ${token}` },
       };
 
-      axios.get(contactUrl, config).then((response) => setContacts(response.data));
+      axios.get(contactUrl, config).then((response) => {
+        setContacts(response.data.filter(
+          contact => contact.belongsTo.username === user.username
+        ))
+      }) 
     }
   }, [user]); // Add dependency array to prevent infinite re-renders
 
-  interface Credentials {
-    username: string;
-    password: string;
-  }
-
-  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const credentials: Credentials = {
+  const handleLogin = async (username: string, password: string) => {
+    const credentials: LoginRequest = {
       username,
       password,
     };
@@ -37,7 +35,7 @@ function App() {
     await handleLoginBackend(credentials);
   };
 
-  const handleLoginBackend = async (credentials: Credentials) => {
+  const handleLoginBackend = async (credentials: LoginRequest) => {
     const baseUrl = "/api/login";
 
     try {
@@ -53,35 +51,13 @@ function App() {
   return (
     <>
       <h1>login</h1>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-
-        <button type="submit">Login</button>
-      </form>
+      <LoginForm handleLogin={handleLogin} />
       {user !== null && (
         <div>
           <h2>Your Contacts</h2>
           {contacts.map((contact) => (
             <div>
-              {contact!.name} {contact!.number}
+              {contact!.name} {contact!.number} 
             </div>
           ))}
         </div>
