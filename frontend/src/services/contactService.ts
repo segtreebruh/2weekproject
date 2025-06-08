@@ -3,7 +3,12 @@ import type { Contact } from '@shared/types';
 
 const baseUrl = "/api/contacts";
 
-export const getAll = async (token: string): Promise<Contact[]> => {
+let token: string;
+export const setToken = (newToken: string) => {
+  token = newToken;
+}
+
+export const getAll = async (): Promise<Contact[]> => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
