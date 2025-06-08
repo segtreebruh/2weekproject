@@ -16,10 +16,6 @@ export interface RegisterRequest {
   password: string
 }
 
-export interface RegisterResponse {
-  
-}
-
 export interface Contact {
   name: string, 
   number: string,
@@ -38,4 +34,14 @@ export interface JwtToken {
   id: string, 
   username: string, 
   name: string
+}
+
+export interface NotificationType {
+  msg: string,
+  type: string
+}
+
+export interface NotificationContextType {
+  notification: NotificationType | null;
+  setNotification: React.Dispatch<React.SetStateAction<NotificationType | null>>;
 }

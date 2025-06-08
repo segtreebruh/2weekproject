@@ -8,26 +8,30 @@ function App() {
   const { localStorageJwt, contacts, handleLogin, handleLogout } = useLogin();
 
   return (
-    <>
-      <Router>
+    <Router>
       <Routes>
-        <Route path="/" element={
-          <>
-            <h1>Login</h1>
-            <LoginForm 
-              handleLogin={handleLogin} 
-              handleLogout={handleLogout}
-              localStorageJwt={localStorageJwt}
-            />
-            {localStorageJwt !== null && (
-              <ContactDisplay contacts={contacts} username={localStorageJwt.username} />
-            )}
-          </>
-        } />
+        <Route
+          path="/"
+          element={
+            <>
+              <h1>Login</h1>
+              <LoginForm
+                handleLogin={handleLogin}
+                handleLogout={handleLogout}
+                localStorageJwt={localStorageJwt}
+              />
+              {localStorageJwt !== null && (
+                <ContactDisplay
+                  contacts={contacts}
+                  username={localStorageJwt.username}
+                />
+              )}
+            </>
+          }
+        />
         <Route path="/register" element={<RegisterForm />} />
       </Routes>
     </Router>
-    </>
   );
 }
 

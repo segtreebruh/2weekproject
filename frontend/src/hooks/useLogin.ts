@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import type { LoginRequest, Contact, LocalStorageJwt } from "@shared/types";
 import * as loginService from "../services/loginService";
 import * as contactService from "../services/contactService";
+import { useNotification } from "./useNotification";
 
 export function useLogin() {
   const [localStorageJwt, setLocalStorageJwt] =
     useState<LocalStorageJwt | null>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const {setNotification} = useNotification();
 
   useEffect(() => {
     const localJwt = window.localStorage.getItem("JwtAccessToken");
@@ -50,8 +52,26 @@ export function useLogin() {
         "JwtAccessToken",
         JSON.stringify(userData)
       );
+
+      setNotification({
+        msg: `Welcome, ${username}!`,
+        type: "success"
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+      return true;
     } catch (error) {
-      console.error("Login failed:", error);
+      console.log("Login failed:", error);
+      
+      setNotification({
+        msg: "Invalid credentials",
+        type: "error"
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+      
       return false;
     }
   };
