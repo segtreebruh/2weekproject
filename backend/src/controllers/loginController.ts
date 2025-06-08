@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/user';
 import config from '../config';
+import type { LoginRequest, LoginResponse } from '@shared/types';
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   const { username, password } = req.body;

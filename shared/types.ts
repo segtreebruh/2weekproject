@@ -22,12 +22,20 @@ export interface RegisterResponse {
 
 export interface Contact {
   name: string, 
-  number: string
+  number: string,
+  belongsTo: {
+    username: string
+  }
 };
+
+// Renamed from User to LocalStorageJwt
+export interface LocalStorageJwt {
+  token: string,
+  username: string
+}
 
 export interface JwtToken {
   id: string, 
   username: string, 
   name: string
 }
-
