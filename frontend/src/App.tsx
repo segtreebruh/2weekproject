@@ -1,9 +1,9 @@
 import LoginForm from "./components/LoginForm";
 import ContactDisplay from "./components/ContactDisplay";
-import { useAuth } from "./hooks/useAuth";
+import { useLogin } from "./hooks/useAuth";
 
 function App() {
-  const { user, contacts, handleLogin } = useAuth();
+  const { user, contacts, handleLogin } = useLogin();
 
   return (
     <>
