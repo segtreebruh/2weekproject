@@ -1,10 +1,11 @@
-import React from 'react';
-import type { Contact } from '@shared/types';
+import React, { useState } from "react";
+import type { Contact } from "@shared/types";
 
 interface ContactDisplayProps {
   contacts: Contact[];
   username: string;
   handleLogout: () => void;
+  handleAddContact: (name: string, number: string) => Promise<void>;
 }
 
 interface ContactComponentProps {
@@ -16,10 +17,25 @@ const ContactComponent: React.FC<ContactComponentProps> = ({ contact }) => {
     <div>
       {contact.name} {contact.number}
     </div>
-  )
-}
+  );
+};
 
-const ContactDisplay: React.FC<ContactDisplayProps> = ({ contacts, username, handleLogout }) => {
+const ContactDisplay: React.FC<ContactDisplayProps> = ({
+  contacts,
+  username,
+  handleLogout,
+  handleAddContact,
+}) => {
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await handleAddContact(newName, newNumber);
+    setNewName("");
+    setNewNumber("");
+  };
+
   return (
     <div>
       <div>
@@ -27,9 +43,25 @@ const ContactDisplay: React.FC<ContactDisplayProps> = ({ contacts, username, han
         <button onClick={handleLogout}>Logout</button>
         <h2>Your Contacts</h2>
       </div>
-      {contacts.map(contact => (
+      {contacts.map((contact) => (
         <ContactComponent key={contact.id} contact={contact} />
       ))}
+
+      <form onSubmit={onSubmit}>
+        <h3>Add new contact</h3>
+        <div>
+          Name:{" "}
+          <input value={newName} onChange={(e) => setNewName(e.target.value)} />
+        </div>
+        <div>
+          Number:{" "}
+          <input
+            value={newNumber}
+            onChange={(e) => setNewNumber(e.target.value)}
+          />
+        </div>
+        <button type="submit">Add</button>
+      </form>
     </div>
   );
 };

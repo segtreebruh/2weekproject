@@ -5,6 +5,7 @@ import * as contactService from "../services/contactService";
 import { useNotification } from "./useNotification";
 import { jwtDecode } from "jwt-decode";
 import type { JwtPayload } from "jwt-decode";
+import { isAxiosError } from "axios";
 
 const isValidToken = (token: string): boolean => {
   try {
@@ -19,8 +20,9 @@ const isValidToken = (token: string): boolean => {
 };
 
 export function useLogin() {
-  const [JwtAccessToken, setJwtAccessToken] =
-    useState<JwtAccessToken | null>(null);
+  const [JwtAccessToken, setJwtAccessToken] = useState<JwtAccessToken | null>(
+    null
+  );
   const [contacts, setContacts] = useState<Contact[]>([]);
   const { showNotification } = useNotification();
 
@@ -82,9 +84,22 @@ export function useLogin() {
     window.localStorage.removeItem("JwtAccessToken");
     setJwtAccessToken(null);
     setContacts([]);
-    contactService.setToken('');
+    contactService.setToken("");
 
     showNotification("Logged out", "success");
+  };
+
+  const handleAddContact = async (name: string, number: string) => {
+    try {
+      const addedContact = await contactService.create({ name, number });
+      setContacts((contacts) => contacts.concat(addedContact));
+      showNotification(`Added ${addedContact.name}`, "success");
+    } catch (error) {
+      console.error("Add contact failed:", error);
+      if (isAxiosError(error)) {
+        showNotification(`${error.response?.data.error}`, "error");
+      }
+    }
   };
 
   return {
@@ -92,5 +107,6 @@ export function useLogin() {
     contacts,
     handleLogin,
     handleLogout,
+    handleAddContact,
   };
 }

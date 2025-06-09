@@ -2,11 +2,22 @@ import LoginForm from "./components/LoginForm";
 import ContactDisplay from "./components/ContactDisplay";
 import RegisterForm from "./components/RegisterForm";
 import { useLogin } from "./hooks/useLogin";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 function App() {
   // localStorageJwt: if not null, basically means logged in
-  const { JwtAccessToken, contacts, handleLogin, handleLogout } = useLogin();
+  const {
+    JwtAccessToken,
+    contacts,
+    handleLogin,
+    handleLogout,
+    handleAddContact,
+  } = useLogin();
 
   return (
     <Router>
@@ -15,14 +26,14 @@ function App() {
         <Route
           path="/login"
           element={
-            JwtAccessToken
-              ? <Navigate to="/home" replace />
-              : <>
-                  <h1>Login</h1>
-                  <LoginForm
-                    handleLogin={handleLogin}
-                  />
-                </>
+            JwtAccessToken ? (
+              <Navigate to="/home" replace />
+            ) : (
+              <>
+                <h1>Login</h1>
+                <LoginForm handleLogin={handleLogin} />
+              </>
+            )
           }
         />
 
@@ -30,9 +41,16 @@ function App() {
         <Route
           path="/home"
           element={
-            JwtAccessToken
-              ? <ContactDisplay contacts={contacts} username={JwtAccessToken.username} handleLogout={handleLogout} />
-              : <Navigate to="/login" replace />
+            JwtAccessToken ? (
+              <ContactDisplay
+                contacts={contacts}
+                username={JwtAccessToken.username}
+                handleLogout={handleLogout}
+                handleAddContact={handleAddContact}
+              />
+            ) : (
+              <Navigate to="/login" replace />
+            )
           }
         />
 
@@ -40,12 +58,14 @@ function App() {
         <Route path="/register" element={<RegisterForm />} />
 
         {/* default route "/": redirect */}
-        <Route 
+        <Route
           path="/"
           element={
-            JwtAccessToken 
-              ? <Navigate to="/home" replace />
-              : <Navigate to="/login" replace />
+            JwtAccessToken ? (
+              <Navigate to="/home" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
           }
         />
       </Routes>
