@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 
 function App() {
   // localStorageJwt: if not null, basically means logged in
-  const { localStorageJwt, contacts, handleLogin, handleLogout } = useLogin();
+  const { JwtAccessToken, contacts, handleLogin, handleLogout } = useLogin();
 
   return (
     <Router>
@@ -15,7 +15,7 @@ function App() {
         <Route
           path="/login"
           element={
-            localStorageJwt
+            JwtAccessToken
               ? <Navigate to="/home" replace />
               : <>
                   <h1>Login</h1>
@@ -30,8 +30,8 @@ function App() {
         <Route
           path="/home"
           element={
-            localStorageJwt
-              ? <ContactDisplay contacts={contacts} username={localStorageJwt.username} handleLogout={handleLogout} />
+            JwtAccessToken
+              ? <ContactDisplay contacts={contacts} username={JwtAccessToken.username} handleLogout={handleLogout} />
               : <Navigate to="/login" replace />
           }
         />
@@ -43,7 +43,7 @@ function App() {
         <Route 
           path="/"
           element={
-            localStorageJwt 
+            JwtAccessToken 
               ? <Navigate to="/home" replace />
               : <Navigate to="/login" replace />
           }

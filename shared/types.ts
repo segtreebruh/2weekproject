@@ -25,7 +25,7 @@ export interface Contact {
   }
 };
 
-export interface LocalStorageJwt {
+export interface JwtAccessToken {
   token: string,
   username: string
 }

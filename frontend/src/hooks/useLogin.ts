@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
-import type { LoginRequest, Contact, LocalStorageJwt } from "@shared/types";
+import { useState, useEffect, useCallback } from "react";
+import type { LoginRequest, Contact, JwtAccessToken } from "@shared/types";
 import * as loginService from "../services/loginService";
 import * as contactService from "../services/contactService";
 import { useNotification } from "./useNotification";
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 import type { JwtPayload } from "jwt-decode";
 
 const isValidToken = (token: string): boolean => {
   try {
     const payload = jwtDecode<JwtPayload>(token);
-    if (typeof payload.exp !== 'number') {
+    if (typeof payload.exp !== "number") {
       return false;
     }
     return Date.now() / 1000 < payload.exp;
@@ -19,10 +19,18 @@ const isValidToken = (token: string): boolean => {
 };
 
 export function useLogin() {
-  const [localStorageJwt, setLocalStorageJwt] =
-    useState<LocalStorageJwt | null>(null);
+  const [JwtAccessToken, setJwtAccessToken] =
+    useState<JwtAccessToken | null>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const { setNotification } = useNotification();
+
+  const showNotification = useCallback(
+    (msg: string, type: string) => {
+      setNotification({ msg, type });
+      setTimeout(() => setNotification(null), 5000);
+    },
+    [setNotification]
+  );
 
   useEffect(() => {
     const localJwt = window.localStorage.getItem("JwtAccessToken");
@@ -31,33 +39,30 @@ export function useLogin() {
       const jwtAccessToken = JSON.parse(localJwt);
 
       if (isValidToken(jwtAccessToken.token)) {
-        setLocalStorageJwt(jwtAccessToken);
+        setJwtAccessToken(jwtAccessToken);
         contactService.setToken(jwtAccessToken.token);
-      }
-      else {
+      } else {
         window.localStorage.removeItem("JwtAccessToken");
-        setLocalStorageJwt(null);
+        setJwtAccessToken(null);
       }
     }
   }, []);
 
   useEffect(() => {
-    if (localStorageJwt !== null) {
-      contactService
-        .getAll()
-        .then((allContacts) => {
-          setContacts(
-            allContacts.filter(
-              (contact: Contact) =>
-                contact.belongsTo.username === localStorageJwt.username
-            )
-          );
-        })
-        .catch((error) => {
-          console.error("Failed to fetch contacts:", error);
-        });
+    if (JwtAccessToken !== null) {
+      const getContacts = async () => {
+        const allContacts = await contactService.getAll();
+        setContacts(
+          allContacts.filter(
+            (contact: Contact) =>
+              contact.belongsTo.username === JwtAccessToken.username
+          )
+        );
+      };
+
+      getContacts();
     }
-  }, [localStorageJwt]);
+  }, [JwtAccessToken]);
 
   const handleLogin = async (username: string, password: string) => {
     const credentials: LoginRequest = {
@@ -68,48 +73,30 @@ export function useLogin() {
     try {
       const userData = await loginService.login(credentials);
       contactService.setToken(userData.token);
-      setLocalStorageJwt(userData);
+      setJwtAccessToken(userData);
       window.localStorage.setItem("JwtAccessToken", JSON.stringify(userData));
 
-      setNotification({
-        msg: `Welcome, ${userData.name}!`,
-        type: "success",
-      });
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
+      showNotification(`Welcome, ${userData.name}!`, "success");
       return true;
     } catch (error) {
       console.log("Login failed:", error);
 
-      setNotification({
-        msg: "Invalid credentials",
-        type: "error",
-      });
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
-
+      showNotification("Invalid credentials", "error");
       return false;
     }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem("JwtAccessToken");
-    setLocalStorageJwt(null);
+    setJwtAccessToken(null);
     setContacts([]);
-
-    setNotification({
-      msg: "Logged out",
-      type: "success",
-    });
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
+    contactService.setToken('');
+    
+    showNotification("Logged out", "success");
   };
 
   return {
-    localStorageJwt,
+    JwtAccessToken,
     contacts,
     handleLogin,
     handleLogout,
