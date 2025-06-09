@@ -17,6 +17,7 @@ export interface RegisterRequest {
 }
 
 export interface Contact {
+  id: string,
   name: string, 
   number: string,
   belongsTo: {
@@ -24,7 +25,6 @@ export interface Contact {
   }
 };
 
-// Renamed from User to LocalStorageJwt
 export interface LocalStorageJwt {
   token: string,
   username: string
