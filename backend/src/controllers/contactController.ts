@@ -52,6 +52,9 @@ export const addNewContact = async (req: Request, res: Response, next: NextFunct
   if (!name) {
     return void res.status(400).send({ error: "Name is required" });
   }
+  if (!number) {
+    return void res.status(400).send({ error: "Number is required "});
+  }
 
   const user = await User.findById(id);
   if (!user) return void res.status(400).send({ error: "missing userId/invalid" });
