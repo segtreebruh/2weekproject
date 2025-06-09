@@ -16,3 +16,11 @@ export const getAll = async (): Promise<Contact[]> => {
   const response = await axios.get(baseUrl, config);
   return response.data;
 };
+
+export const deleteById = async (id: string) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  
+  await axios.delete(baseUrl + `/${id}`, config);
+}

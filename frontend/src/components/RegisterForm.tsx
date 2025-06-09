@@ -22,7 +22,7 @@ const RegisterForm = () => {
       }
 
       await registerService.register(registerData);
-      navigate("/");
+      navigate("/login");
     } catch (err) {
       console.error(err);
     }
@@ -73,7 +73,7 @@ const RegisterForm = () => {
         </div>
         <button>Register</button>
       </form>
-      <button onClick={() => navigate("/")}>Cancel</button>
+      <button onClick={() => navigate("/login")}>Cancel</button>
     </>
   )
 }
