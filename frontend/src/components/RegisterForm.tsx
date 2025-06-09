@@ -10,7 +10,7 @@ const RegisterForm = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const { setNotification } = useNotification();
+  const { showNotification } = useNotification();
   const navigate = useNavigate();
 
 
@@ -27,23 +27,11 @@ const RegisterForm = () => {
 
       await registerService.register(registerData);
       navigate("/login");
-      setNotification({
-        msg: `Register success`,
-        type: "success",
-      });
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
+      showNotification("Register success", "success");
     } catch (err) {
       console.error(err);
       if (isAxiosError(err)) {
-        setNotification({
-          msg: `${err.response?.data.error}`,
-          type: "error",
-        });
-        setTimeout(() => {
-          setNotification(null);
-        }, 5000);
+        showNotification(`${err.response?.data.error}`, "error");
       }
     }
   }

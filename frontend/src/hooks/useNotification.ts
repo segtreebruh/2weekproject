@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useCallback } from "react";
 import { NotificationContext } from "../contexts/NotificationContext";
 
 export const useNotification = () => {
@@ -6,5 +6,13 @@ export const useNotification = () => {
   if (context === undefined) 
     throw new Error('useNotification must be used within a NotificationContextProvider');
 
-  return context;
+  const { notification, setNotification } = context;
+  const showNotification = useCallback(
+    (msg: string, type: string) => {
+      setNotification({ msg, type });
+      setTimeout(() => setNotification(null), 5000);
+    },
+    [setNotification]
+  );
+  return { notification, setNotification, showNotification };
 }

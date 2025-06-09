@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import type { LoginRequest, Contact, JwtAccessToken } from "@shared/types";
 import * as loginService from "../services/loginService";
 import * as contactService from "../services/contactService";
@@ -22,15 +22,7 @@ export function useLogin() {
   const [JwtAccessToken, setJwtAccessToken] =
     useState<JwtAccessToken | null>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
-  const { setNotification } = useNotification();
-
-  const showNotification = useCallback(
-    (msg: string, type: string) => {
-      setNotification({ msg, type });
-      setTimeout(() => setNotification(null), 5000);
-    },
-    [setNotification]
-  );
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     const localJwt = window.localStorage.getItem("JwtAccessToken");
@@ -91,7 +83,7 @@ export function useLogin() {
     setJwtAccessToken(null);
     setContacts([]);
     contactService.setToken('');
-    
+
     showNotification("Logged out", "success");
   };
 
