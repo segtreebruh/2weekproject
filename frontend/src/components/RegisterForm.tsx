@@ -2,15 +2,19 @@ import type { RegisterRequest } from "@shared/types";
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as registerService from '../services/registerService';
+import { useNotification } from "../hooks/useNotification";
+import { isAxiosError } from 'axios';
 
 const RegisterForm = () => { 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const { setNotification } = useNotification();
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+  const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
@@ -23,15 +27,31 @@ const RegisterForm = () => {
 
       await registerService.register(registerData);
       navigate("/login");
+      setNotification({
+        msg: `Register success`,
+        type: "success",
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
     } catch (err) {
       console.error(err);
+      if (isAxiosError(err)) {
+        setNotification({
+          msg: `${err.response?.data.error}`,
+          type: "error",
+        });
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
+      }
     }
   }
   
   return (
     <>
       <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleRegister}>
         <div>
           Name
           <input

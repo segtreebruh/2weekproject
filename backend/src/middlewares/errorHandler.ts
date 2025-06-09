@@ -11,9 +11,12 @@ const errorHandler = (error: Error, req: Request, res: Response, next: NextFunct
     error.name === "MongoServerError" &&
     error.message.includes("E11000 duplicate key error")
   ) {
+    const duplicate = error.message.includes("email")
+      ? "Email"
+      : "Username"
     return void res
       .status(400)
-      .json({ error: "Username or email has already existed" });
+      .json({ error: `${duplicate} has already existed` });
   } else if (error.name === "JsonWebTokenError") {
     return void res.status(401).json({ error: "invalid token" });
   } else if (error.name === "TokenExpiredError") {

@@ -18,6 +18,27 @@ export const getById = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
+export const deleteById = async (req: Request, res: Response, next: NextFunction) => {
+  const request = req as any;
+  const token = request.token;
+
+  const decodedToken = jwt.verify(token, config.SECRET_KEY) as any;
+  const id = decodedToken.id;
+
+  if (!id) return void res.status(401).send({ error: "invalid token" });
+
+  const user = await User.findById(id);
+  if (!user) return void res.status(400).send({ error: "missing userId/invalid" });
+
+  try {
+    await Contact.findByIdAndDelete(req.params.id);
+    user.contacts = user.contacts.filter(c => c.toString() != req.params.id);
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+}
+
 export const addNewContact = async (req: Request, res: Response, next: NextFunction) => { 
   const request = req as any;
   const { name, number } = request.body;

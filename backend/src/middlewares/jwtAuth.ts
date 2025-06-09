@@ -17,9 +17,6 @@ export const jwtAuth = (req: Request, res: Response, next: NextFunction) => {
       return void res.status(401).json({ error: 'Token invalid' });
     }
     
-    // You can add the decoded token to the request for use in subsequent middleware/routes
-    // (req as any).user = decodedToken;
-    
     next();
   } catch (error) {
     return void res.status(401).json({ error: 'Token invalid or expired' });
