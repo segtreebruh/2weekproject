@@ -1,6 +1,7 @@
 import LoginForm from "./components/LoginForm";
 import ContactDisplay from "./components/ContactDisplay";
 import RegisterForm from "./components/RegisterForm";
+import { NotFoundPage } from "./components/NotFoundPage";
 import { useLogin } from "./hooks/useLogin";
 import {
   BrowserRouter as Router,
@@ -68,6 +69,9 @@ function App() {
             )
           }
         />
+
+        {/* 404 not found */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );
