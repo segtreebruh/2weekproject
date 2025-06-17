@@ -1,8 +1,7 @@
-import config from "../config";
 import Contact from '../models/contact';
 import User from "../models/user";
-import express, { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
+import '@shared/types';
 
 export const getAllContact = async (req: Request, res: Response, next: NextFunction) => {
   const contacts = await Contact.find({}).populate("belongsTo", { username: 1, name: 1 });
@@ -19,16 +18,12 @@ export const getById = async (req: Request, res: Response, next: NextFunction) =
 };
 
 export const deleteById = async (req: Request, res: Response, next: NextFunction) => {
-  const request = req as any;
-  const token = request.token;
+  const userId = req.user?.id;
 
-  const decodedToken = jwt.verify(token, config.SECRET_KEY) as any;
-  const id = decodedToken.id;
+  if (!userId) return void res.status(401).send({ error: "Authentication required" });
 
-  if (!id) return void res.status(401).send({ error: "invalid token" });
-
-  const user = await User.findById(id);
-  if (!user) return void res.status(400).send({ error: "missing userId/invalid" });
+  const user = await User.findById(userId);
+  if (!user) return void res.status(400).send({ error: "User not found" });
 
   try {
     await Contact.findByIdAndDelete(req.params.id);
@@ -40,14 +35,10 @@ export const deleteById = async (req: Request, res: Response, next: NextFunction
 }
 
 export const addNewContact = async (req: Request, res: Response, next: NextFunction) => { 
-  const request = req as any;
-  const { name, number } = request.body;
-  const token = request.token;
+  const { name, number } = req.body;
+  const userId = req.user?.id;
 
-  const decodedToken = jwt.verify(token, config.SECRET_KEY) as any;
-  const id = decodedToken.id;
-
-  if (!id) return void res.status(401).send({ error: "invalid token" });
+  if (!userId) return void res.status(401).send({ error: "invalid token" });
   
   if (!name) {
     return void res.status(400).send({ error: "Name is required" });
@@ -56,13 +47,13 @@ export const addNewContact = async (req: Request, res: Response, next: NextFunct
     return void res.status(400).send({ error: "Number is required "});
   }
 
-  const user = await User.findById(id);
+  const user = await User.findById(userId);
   if (!user) return void res.status(400).send({ error: "missing userId/invalid" });
   
   const contact = new Contact({
     name,
     number,
-    belongsTo: id
+    belongsTo: userId
   });
 
   console.log("ok");
@@ -77,4 +68,3 @@ export const addNewContact = async (req: Request, res: Response, next: NextFunct
     next(err);
   }
 }
-

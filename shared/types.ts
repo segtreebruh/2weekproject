@@ -30,18 +30,21 @@ export interface JwtAccessToken {
   username: string
 }
 
-export interface JwtToken {
-  id: string, 
-  username: string, 
-  name: string
-}
-
 export interface NotificationType {
   msg: string,
   type: string
 }
 
-export interface NotificationContextType {
-  notification: NotificationType | null;
-  setNotification: React.Dispatch<React.SetStateAction<NotificationType | null>>;
+
+// extend express.Request
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+        username: string;
+      }
+      token?: string;
+    }
+  }
 }
