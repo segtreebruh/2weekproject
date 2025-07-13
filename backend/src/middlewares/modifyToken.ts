@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import '@shared/types';
 
 const modifyToken = (req: Request, res: Response, next: NextFunction) => {
   const authorization = req.get("authorization");
@@ -6,10 +7,10 @@ const modifyToken = (req: Request, res: Response, next: NextFunction) => {
 
   if (authorization && authorization.startsWith("Bearer ")) {
     // delete 'Bearer' and add new field 'token'
-    (req as any).token = authorization.substring(7);
+    req.token = authorization.substring(7);
   }
 
-  console.log((req as any).token);
+  console.log(req.token);
   next();
 }
 

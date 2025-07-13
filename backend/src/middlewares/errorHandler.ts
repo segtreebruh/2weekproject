@@ -4,7 +4,7 @@ const errorHandler = (error: Error, req: Request, res: Response, next: NextFunct
   console.log("ErrorHandler intercepted: ", error);
 
   if (error.name === "CastError") {
-    return void res.status(400).send({ error: "malformatted id" });
+    return void res.status(400).send({ error: "Invalid id" });
   } else if (error.name === "ValidationError") {
     return void res.status(400).json({ error: error.message });
   } else if (

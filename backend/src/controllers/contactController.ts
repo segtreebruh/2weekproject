@@ -3,7 +3,7 @@ import User from "../models/user";
 import { Request, Response, NextFunction } from 'express';
 import '@shared/types';
 
-export const getAllContact = async (req: Request, res: Response, next: NextFunction) => {
+export const getAllContacts = async (req: Request, res: Response, next: NextFunction) => {
   const contacts = await Contact.find({}).populate("belongsTo", { username: 1, name: 1 });
   res.json(contacts);
 }
@@ -18,7 +18,7 @@ export const getById = async (req: Request, res: Response, next: NextFunction) =
 };
 
 export const deleteById = async (req: Request, res: Response, next: NextFunction) => {
-  const userId = req.user?.id;
+  const userId = req.user.id;
 
   if (!userId) return void res.status(401).send({ error: "Authentication required" });
 
@@ -34,9 +34,9 @@ export const deleteById = async (req: Request, res: Response, next: NextFunction
   }
 }
 
-export const addNewContact = async (req: Request, res: Response, next: NextFunction) => { 
+export const addNewContacts = async (req: Request, res: Response, next: NextFunction) => { 
   const { name, number } = req.body;
-  const userId = req.user?.id;
+  const userId = req.user.id;
 
   if (!userId) return void res.status(401).send({ error: "invalid token" });
   

@@ -35,12 +35,11 @@ export interface NotificationType {
   type: string
 }
 
-
 // extend express.Request
 declare global {
   namespace Express {
     interface Request {
-      user?: {
+      user: {
         id: string;
         username: string;
       }

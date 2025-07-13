@@ -16,10 +16,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     username: user.username,
     id: user._id
   };
- 
-  if (!config.SECRET_KEY) {
-    throw new Error("SECRET_KEY is not defined in config");
-  }
 
   const token = jwt.sign(payload, config.SECRET_KEY, { expiresIn: 60*60 });
 

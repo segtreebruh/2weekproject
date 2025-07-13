@@ -1,14 +1,14 @@
 import {
-  getAllContact, 
+  getAllContacts, 
   getById,
-  addNewContact
+  addNewContacts
 } from '../controllers/contactController';
 import { Router } from 'express';
 
 const contactRouter = Router();
 
-contactRouter.get('/', getAllContact);
+contactRouter.get('/', getAllContacts);
 contactRouter.get('/:id', getById);
-contactRouter.post('/', addNewContact);
+contactRouter.post('/', addNewContacts);
 
 export default contactRouter;
