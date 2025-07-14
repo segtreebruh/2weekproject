@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { LoginRequest, Contact, CustomJwtPayload } from "@shared/types";
+import type { LoginRequest, Contact, JwtPayload } from "@shared/types";
 import * as loginService from "../services/loginService";
 import * as contactService from "../services/contactService";
 import { useNotification } from "./useNotification";
@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 
 const isValidToken = (token: string): boolean => {
   try {
-    const payload = jwtDecode<CustomJwtPayload>(token);
+    const payload = jwtDecode<JwtPayload>(token);
     if (typeof payload.exp !== "number") {
       return false;
     }
@@ -18,23 +18,21 @@ const isValidToken = (token: string): boolean => {
 };
 
 export function useLogin() {
-  const [jwt, setJwt] = useState(null);
+  const [jwt, setJwt] = useState<string | null>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const { showNotification } = useNotification();
 
   const payload = jwt !== null 
-    ? jwtDecode<CustomJwtPayload>(jwt)
+    ? jwtDecode<JwtPayload>(jwt)
     : null;
 
   useEffect(() => {
-    const localJwt = window.localStorage.getItem("JwtAccessToken");
+    const jwtAccessToken = window.localStorage.getItem("JwtAccessToken");
 
-    if (localJwt) {
-      const jwtAccessToken = JSON.parse(localJwt);
-
-      if (isValidToken(jwtAccessToken.token)) {
-        setJwt(jwtAccessToken.token);
-        contactService.setToken(jwtAccessToken.token);
+    if (jwtAccessToken) {
+      if (isValidToken(jwtAccessToken)) {
+        setJwt(jwtAccessToken);
+        contactService.setToken(jwtAccessToken);
       } else {
         window.localStorage.removeItem("JwtAccessToken");
         setJwt(null);

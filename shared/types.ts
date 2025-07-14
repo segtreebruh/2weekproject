@@ -26,7 +26,7 @@ export interface NotificationType {
 }
 
 // custom jwt for both be/fr
-export interface CustomJwtPayload {
+export interface JwtPayload {
   id: string;
   username: string;
   name: string;

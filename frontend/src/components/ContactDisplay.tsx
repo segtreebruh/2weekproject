@@ -8,24 +8,11 @@ interface ContactDisplayProps {
   handleAddContact: (name: string, number: string) => Promise<void>;
 }
 
-interface ContactComponentProps {
-  contact: Contact;
-}
-
-const ContactComponent: React.FC<ContactComponentProps> = ({ contact }) => {
-  return (
-    <div>
-      {contact.name} {contact.number}
-    </div>
-  );
-};
-
-const ContactDisplay: React.FC<ContactDisplayProps> = ({
+const ContactDisplay = ({
   contacts,
   username,
   handleLogout,
-  handleAddContact,
-}) => {
+  handleAddContact }: ContactDisplayProps) => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
 
@@ -44,7 +31,9 @@ const ContactDisplay: React.FC<ContactDisplayProps> = ({
         <h2>Your Contacts</h2>
       </div>
       {contacts.map((contact) => (
-        <ContactComponent key={contact.id} contact={contact} />
+        <div>
+          {contact.name} {contact.number}
+        </div>
       ))}
 
       <form onSubmit={onSubmit}>

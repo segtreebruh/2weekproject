@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import config from "../config";
-import type { CustomJwtPayload } from "@shared/types";
+import type { JwtPayload } from "@shared/types";
 
 
 export const jwtAuth = (req: Request, res: Response, next: NextFunction) => {
@@ -12,7 +12,7 @@ export const jwtAuth = (req: Request, res: Response, next: NextFunction) => {
       return void res.status(401).json({ error: "No token provided" });
     }
 
-    const payload = jwt.verify(token, config.SECRET_KEY) as CustomJwtPayload;
+    const payload = jwt.verify(token, config.SECRET_KEY) as JwtPayload;
     if (!payload) {
       return void res.status(401).json({ error: "Invalid token" });
     }
