@@ -5,7 +5,7 @@ interface LoginFormProps {
   handleLogin: (username: string, password: string) => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ handleLogin }) => {
+const LoginForm = ({ handleLogin }: LoginFormProps ) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();

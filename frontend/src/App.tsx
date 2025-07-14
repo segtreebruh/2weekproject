@@ -3,6 +3,7 @@ import ContactDisplay from "./components/ContactDisplay";
 import RegisterForm from "./components/RegisterForm";
 import { NotFoundPage } from "./components/NotFoundPage";
 import { useLogin } from "./hooks/useLogin";
+import { useContacts } from "./hooks/useContacts";
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,14 +12,14 @@ import {
 } from "react-router-dom";
 
 function App() {
-  // localStorageJwt: if not null, basically means logged in
   const {
-    JwtAccessToken,
+    payload,
     contacts,
     handleLogin,
     handleLogout,
-    handleAddContact,
   } = useLogin();
+
+  const { handleAddContact } = useContacts();
 
   return (
     <Router>
@@ -27,7 +28,7 @@ function App() {
         <Route
           path="/login"
           element={
-            JwtAccessToken ? (
+            payload ? (
               <Navigate to="/home" replace />
             ) : (
               <>
@@ -42,10 +43,10 @@ function App() {
         <Route
           path="/home"
           element={
-            JwtAccessToken ? (
+            payload ? (
               <ContactDisplay
                 contacts={contacts}
-                username={JwtAccessToken.username}
+                username={payload.username}
                 handleLogout={handleLogout}
                 handleAddContact={handleAddContact}
               />
@@ -62,7 +63,7 @@ function App() {
         <Route
           path="/"
           element={
-            JwtAccessToken ? (
+            payload ? (
               <Navigate to="/home" replace />
             ) : (
               <Navigate to="/login" replace />

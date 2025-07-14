@@ -14,10 +14,11 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
   const payload = {
     username: user.username,
+    name: user.name,
     id: user._id
   };
 
   const token = jwt.sign(payload, config.SECRET_KEY, { expiresIn: 60*60 });
 
-  res.status(200).send({ token, username: username, name: user.name});
+  res.status(200).send({ token });
 } 

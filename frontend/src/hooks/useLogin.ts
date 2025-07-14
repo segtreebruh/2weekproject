@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
-import type { LoginRequest, Contact, JwtAccessToken } from "@shared/types";
+import type { LoginRequest, Contact, CustomJwtPayload } from "@shared/types";
 import * as loginService from "../services/loginService";
 import * as contactService from "../services/contactService";
 import { useNotification } from "./useNotification";
 import { jwtDecode } from "jwt-decode";
-import type { JwtPayload } from "jwt-decode";
-import { isAxiosError } from "axios";
 
 const isValidToken = (token: string): boolean => {
   try {
-    const payload = jwtDecode<JwtPayload>(token);
+    const payload = jwtDecode<CustomJwtPayload>(token);
     if (typeof payload.exp !== "number") {
       return false;
     }
@@ -20,11 +18,13 @@ const isValidToken = (token: string): boolean => {
 };
 
 export function useLogin() {
-  const [JwtAccessToken, setJwtAccessToken] = useState<JwtAccessToken | null>(
-    null
-  );
+  const [jwt, setJwt] = useState(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const { showNotification } = useNotification();
+
+  const payload = jwt !== null 
+    ? jwtDecode<CustomJwtPayload>(jwt)
+    : null;
 
   useEffect(() => {
     const localJwt = window.localStorage.getItem("JwtAccessToken");
@@ -33,30 +33,31 @@ export function useLogin() {
       const jwtAccessToken = JSON.parse(localJwt);
 
       if (isValidToken(jwtAccessToken.token)) {
-        setJwtAccessToken(jwtAccessToken);
+        setJwt(jwtAccessToken.token);
         contactService.setToken(jwtAccessToken.token);
       } else {
         window.localStorage.removeItem("JwtAccessToken");
-        setJwtAccessToken(null);
+        setJwt(null);
       }
     }
   }, []);
 
   useEffect(() => {
-    if (JwtAccessToken !== null) {
+    if (payload !== null) {
       const getContacts = async () => {
         const allContacts = await contactService.getAll();
+
         setContacts(
           allContacts.filter(
             (contact: Contact) =>
-              contact.belongsTo.username === JwtAccessToken.username
+              contact.belongsTo.username === payload.username
           )
         );
       };
 
       getContacts();
     }
-  }, [JwtAccessToken]);
+  }, [payload]);
 
   const handleLogin = async (username: string, password: string) => {
     const credentials: LoginRequest = {
@@ -65,12 +66,12 @@ export function useLogin() {
     };
 
     try {
-      const userData = await loginService.login(credentials);
-      contactService.setToken(userData.token);
-      setJwtAccessToken(userData);
-      window.localStorage.setItem("JwtAccessToken", JSON.stringify(userData));
+      const response = await loginService.login(credentials);
+      contactService.setToken(response.token);
+      setJwt(response.token); 
+      window.localStorage.setItem("JwtAccessToken", JSON.stringify(response.token));
 
-      showNotification(`Welcome, ${userData.name}!`, "success");
+      showNotification(`Welcome back!`, "success");
       return true;
     } catch (error) {
       console.log("Login failed:", error);
@@ -82,31 +83,17 @@ export function useLogin() {
 
   const handleLogout = () => {
     window.localStorage.removeItem("JwtAccessToken");
-    setJwtAccessToken(null);
+    setJwt(null);
     setContacts([]);
     contactService.setToken("");
 
     showNotification("Logged out", "success");
   };
 
-  const handleAddContact = async (name: string, number: string) => {
-    try {
-      const addedContact = await contactService.create({ name, number });
-      setContacts((contacts) => contacts.concat(addedContact));
-      showNotification(`Added ${addedContact.name}`, "success");
-    } catch (error) {
-      console.error("Add contact failed:", error);
-      if (isAxiosError(error)) {
-        showNotification(`${error.response?.data.error}`, "error");
-      }
-    }
-  };
-
   return {
-    JwtAccessToken,
+    payload,
     contacts,
     handleLogin,
-    handleLogout,
-    handleAddContact,
+    handleLogout
   };
 }

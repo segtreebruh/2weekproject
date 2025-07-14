@@ -1,14 +1,8 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import config from "../config";
-import "@shared/types";
+import type { CustomJwtPayload } from "@shared/types";
 
-interface JwtPayload {
-  id: string;
-  username: string;
-  iat: number;
-  exp: number;
-}
 
 export const jwtAuth = (req: Request, res: Response, next: NextFunction) => {
   const token = req.token;
@@ -18,7 +12,7 @@ export const jwtAuth = (req: Request, res: Response, next: NextFunction) => {
       return void res.status(401).json({ error: "No token provided" });
     }
 
-    const payload = jwt.verify(token, config.SECRET_KEY) as JwtPayload;
+    const payload = jwt.verify(token, config.SECRET_KEY) as CustomJwtPayload;
     if (!payload) {
       return void res.status(401).json({ error: "Invalid token" });
     }
@@ -26,6 +20,7 @@ export const jwtAuth = (req: Request, res: Response, next: NextFunction) => {
     req.user = {
       id: payload.id,
       username: payload.username,
+      name: payload.name
     };
 
     next();
