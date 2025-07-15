@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import type { Contact } from "@shared/types";
 
-interface ContactDisplayProps {
+interface HomepageProps {
   contacts: Contact[];
   username: string;
   handleLogout: () => void;
   handleAddContact: (name: string, number: string) => Promise<void>;
 }
 
-const ContactDisplay = ({
+const Homepage = ({
   contacts,
   username,
   handleLogout,
-  handleAddContact }: ContactDisplayProps) => {
+  handleAddContact }: HomepageProps) => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
 
@@ -55,4 +55,4 @@ const ContactDisplay = ({
   );
 };
 
-export default ContactDisplay;
+export default Homepage;

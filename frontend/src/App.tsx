@@ -1,5 +1,5 @@
 import LoginForm from "./components/LoginForm";
-import ContactDisplay from "./components/ContactDisplay";
+import Homepage from "./components/Homepage";
 import RegisterForm from "./components/RegisterForm";
 import { NotFoundPage } from "./components/NotFoundPage";
 import { useLogin } from "./hooks/useLogin";
@@ -44,7 +44,7 @@ function App() {
           path="/home"
           element={
             payload ? (
-              <ContactDisplay
+              <Homepage
                 contacts={contacts}
                 username={payload.username}
                 handleLogout={handleLogout}
