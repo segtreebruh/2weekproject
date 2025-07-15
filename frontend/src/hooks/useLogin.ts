@@ -67,7 +67,7 @@ export function useLogin() {
       const response = await loginService.login(credentials);
       contactService.setToken(response.token);
       setJwt(response.token); 
-      window.localStorage.setItem("JwtAccessToken", JSON.stringify(response.token));
+      window.localStorage.setItem("JwtAccessToken", response.token);
 
       showNotification(`Welcome back!`, "success");
       return true;
