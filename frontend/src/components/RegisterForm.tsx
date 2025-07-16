@@ -37,52 +37,53 @@ const RegisterForm = () => {
   }
   
   return (
-    <>
-      <h1>Register</h1>
-      <form onSubmit={handleRegister}>
-        <div>
-          Name
+    <div className="register-form-container">
+      <form className="register-form" onSubmit={handleRegister}>
+        <h2>Register</h2>
+        <div className="form-group">
+          <label>Name</label>
           <input
+            className="input"
             type="text"
             value={name}
             name="Name"
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-
-        <div>
-          Username
+        <div className="form-group">
+          <label>Username</label>
           <input
+            className="input"
             type="text"
             value={username}
             name="Username"
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-
-        <div>
-          Email
+        <div className="form-group">
+          <label>Email</label>
           <input
+            className="input"
             type="text"
             value={email}
             name="Email"
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        
-        <div>
-          password
+        <div className="form-group">
+          <label>Password</label>
           <input
+            className="input"
             type="password"
             value={password}
             name="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button>Register</button>
+        <button className="btn-primary" type="submit">Register</button>
       </form>
-      <button onClick={() => navigate("/login")}>Cancel</button>
-    </>
+      <button className="btn-secondary" onClick={() => navigate("/login")}>Cancel</button>
+    </div>
   )
 }
 

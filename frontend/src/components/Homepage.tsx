@@ -24,32 +24,31 @@ const Homepage = ({
   };
 
   return (
-    <div>
-      <div>
-        <p>{username} logged in</p>
-        <button onClick={handleLogout}>Logout</button>
-        <h2>Your Contacts</h2>
+    <div className="homepage-container">
+      <div className="homepage-header">
+        <p className="homepage-user">{username} logged in</p>
+        <button className="homepage-logout" onClick={handleLogout}>Logout</button>
+        <h2 className="homepage-title">Your Contacts</h2>
       </div>
-      {contacts.map((contact) => (
-        <div>
-          {contact.name} {contact.number}
-        </div>
-      ))}
-
-      <form onSubmit={onSubmit}>
+      <div className="contacts-list">
+        {contacts.map((contact) => (
+          <div className="contact-card" key={contact.id}>
+            <span className="contact-name">{contact.name}</span>
+            <span className="contact-number">{contact.number}</span>
+          </div>
+        ))}
+      </div>
+      <form className="add-contact-form" onSubmit={onSubmit}>
         <h3>Add new contact</h3>
-        <div>
-          Name:{" "}
-          <input value={newName} onChange={(e) => setNewName(e.target.value)} />
+        <div className="form-group">
+          <label>Name:</label>
+          <input className="input" value={newName} onChange={(e) => setNewName(e.target.value)} />
         </div>
-        <div>
-          Number:{" "}
-          <input
-            value={newNumber}
-            onChange={(e) => setNewNumber(e.target.value)}
-          />
+        <div className="form-group">
+          <label>Number:</label>
+          <input className="input" value={newNumber} onChange={(e) => setNewNumber(e.target.value)} />
         </div>
-        <button type="submit">Add</button>
+        <button className="btn-primary" type="submit">Add</button>
       </form>
     </div>
   );

@@ -1,3 +1,127 @@
+/* Homepage Styles */
+.homepage-container {
+  max-width: 600px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-light);
+  padding: 32px 24px;
+}
+.homepage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.homepage-user {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+.homepage-logout {
+  background: var(--error-color);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.homepage-logout:hover {
+  background: #b91c1c;
+}
+.homepage-title {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+.contacts-list {
+  margin-bottom: 24px;
+}
+.contact-card {
+  display: flex;
+  justify-content: space-between;
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-light);
+}
+.contact-name {
+  font-weight: 500;
+}
+.contact-number {
+  color: #6b7280;
+}
+.add-contact-form {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: var(--shadow-light);
+}
+.form-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  transition: var(--transition);
+}
+.input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+.btn-primary {
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-primary:hover {
+  background: #5a67d8;
+}
+.btn-secondary {
+  background: #e2e8f0;
+  color: #374151;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: var(--transition);
+}
+.btn-secondary:hover {
+  background: #cbd5e1;
+}
+/* Login/Register Form Styles */
+.login-form-container, .register-form-container {
+  max-width: 400px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-light);
+  padding: 32px 24px;
+}
+.login-form h2, .register-form h2 {
+  color: var(--primary-color);
+  margin-bottom: 24px;
+  text-align: center;
+}
+.login-form, .register-form {
+  display: flex;
+  flex-direction: column;
+}
 /* Modern CSS Styles */
 
 :root {

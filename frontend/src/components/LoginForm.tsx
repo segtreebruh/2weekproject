@@ -20,30 +20,33 @@ const LoginForm = ({ handleLogin }: LoginFormProps ) => {
   };
 
   return (
-    <>
-      <form onSubmit={onSubmit}>
-        <div>
-          username
+    <div className="login-form-container">
+      <form className="login-form" onSubmit={onSubmit}>
+        <h2>Login</h2>
+        <div className="form-group">
+          <label>Username</label>
           <input
+            className="input"
             type="text"
             value={username}
             name="Username"
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-        <div>
-          password
+        <div className="form-group">
+          <label>Password</label>
           <input
+            className="input"
             type="password"
             value={password}
             name="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Login</button>
+        <button className="btn-primary" type="submit">Login</button>
       </form>
-      <button onClick={registerRedirect}>Register</button>
-    </>
+      <button className="btn-secondary" onClick={registerRedirect}>Register</button>
+    </div>
   );
 };
 

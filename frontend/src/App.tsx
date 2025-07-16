@@ -32,7 +32,6 @@ function App() {
               <Navigate to="/home" replace />
             ) : (
               <>
-                <h1>Login</h1>
                 <LoginForm handleLogin={handleLogin} />
               </>
             )
